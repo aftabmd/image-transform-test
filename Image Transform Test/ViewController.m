@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "UIImage+Extensions.h"
+
 
 @interface ViewController ()
 
@@ -16,7 +18,7 @@
 
 @synthesize myimage;
 @synthesize importedImageView;
-
+@synthesize importTranslation, importRotation, importScale;
 
 
 
@@ -37,17 +39,12 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+
+#pragma mark Image Picker Methods
+
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-//    
-//    [self rotateControlsForOrientation:[[UIDevice currentDevice] orientation]];
-//    
-//    self.importPreviewContainerView.hidden = YES;
-//    self.importPreviewBackImageView.image = nil;
-//    self.importPreviewFrontImageView.image = nil;
-//    self.importedImage = nil;
-//    
-//    [picker dismissModalViewControllerAnimated:YES];
+    [picker dismissModalViewControllerAnimated:YES];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -56,6 +53,9 @@
 	UIImage *image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
     
     self.myimage = image;
+
+    self.myimage = [self.myimage imageRotatedByDegrees:90.0f];
+    
     self.importedImageView.image = self.myimage;
     
     NSLog(@"Done picking imagePickerController");
@@ -73,7 +73,44 @@
     [self presentViewController:imagePickerController animated:YES completion:^{
         NSLog(@"Presented image picker controller.");
     }];
+}
+
+
+#pragma mark Gesture Recognizers
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+- (IBAction)handlePanGesture:(UIPanGestureRecognizer *)sender
+{
+    CGPoint translation = [sender translationInView:sender.view];
+    self.importTranslation = CGAffineTransformTranslate(self.importTranslation, translation.x, translation.y);
+    [sender setTranslation:CGPointZero inView:sender.view];
     
+    NSLog(@"asdfasdfsd");
+    
+    //[self updateImportPreview];
+}
+
+- (IBAction)handlePinchGesture:(UIPinchGestureRecognizer *)sender
+{
+    //    CGPoint location = [sender locationInView:sender.view];//self.importPreviewBackImageView
+    //    self.importScale = CGAffineTransformTranslate(self.importScale, -location.x/2.0, -location.y/2.0);
+    self.importScale = CGAffineTransformScale(self.importScale, sender.scale, sender.scale);
+    //    self.importScale = CGAffineTransformTranslate(self.importScale, +location.x/2.0, +location.y/2.0);
+    [sender setScale:1.0];
+    
+    //[self updateImportPreview];
+}
+
+- (IBAction)handleRotationGesture:(UIRotationGestureRecognizer *)sender
+{
+    self.importRotation = CGAffineTransformRotate(self.importRotation, sender.rotation);
+    [sender setRotation:0.0];
+    
+    //[self updateImportPreview];
 }
 
 @end

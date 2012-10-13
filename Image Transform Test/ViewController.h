@@ -16,8 +16,14 @@
 @property (nonatomic, retain) UIImage *myimage;
 @property (retain, nonatomic) IBOutlet UIImageView *importedImageView;
 
+@property (nonatomic) CGAffineTransform importTranslation, importRotation, importScale;
+
 
 - (IBAction)selectExistingPhoto:(id)sender;
+
+- (IBAction)handlePanGesture:(UIPanGestureRecognizer *)sender;
+- (IBAction)handlePinchGesture:(UIPinchGestureRecognizer *)sender;
+- (IBAction)handleRotationGesture:(UIRotationGestureRecognizer *)sender;
 
 
 @end

@@ -19,6 +19,7 @@
 		947E87AB1621693D00795538 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 947E87AA1621693D00795538 /* AssetsLibrary.framework */; };
 		947E87AF1621696100795538 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 947E87AE1621696100795538 /* CoreImage.framework */; };
 		947E87B1162169A900795538 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 947E87B0162169A900795538 /* MobileCoreServices.framework */; };
+		94C40C6F1628CEE50096C817 /* UIImage+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C40C6D1628CA800096C817 /* UIImage+Extensions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,8 @@
 		947E87AC1621695700795538 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		947E87AE1621696100795538 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		947E87B0162169A900795538 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		94C40C6C1628CA800096C817 /* UIImage+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Extensions.h"; sourceTree = "<group>"; };
+		94C40C6D1628CA800096C817 /* UIImage+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Extensions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +103,8 @@
 				947E879D1621651500795538 /* ViewController.h */,
 				947E879E1621651500795538 /* ViewController.m */,
 				947E87A01621651500795538 /* ViewController.xib */,
+				94C40C6C1628CA800096C817 /* UIImage+Extensions.h */,
+				94C40C6D1628CA800096C817 /* UIImage+Extensions.m */,
 				947E87921621651500795538 /* Supporting Files */,
 			);
 			path = "Image Transform Test";
@@ -179,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94C40C6F1628CEE50096C817 /* UIImage+Extensions.m in Sources */,
 				947E87981621651500795538 /* main.m in Sources */,
 				947E879C1621651500795538 /* AppDelegate.m in Sources */,
 				947E879F1621651500795538 /* ViewController.m in Sources */,
@@ -293,6 +299,7 @@
 				947E87A71621651500795538 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
