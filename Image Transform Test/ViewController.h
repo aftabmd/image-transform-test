@@ -13,11 +13,14 @@
 
 @interface ViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate>
 
-@property (nonatomic, retain) UIImage *myimage;
+@property (retain, nonatomic) IBOutlet UIImageView *previewImageView;
 @property (retain, nonatomic) IBOutlet UIImageView *importedImageView;
+@property (retain, nonatomic) UIImage *finalImage;
 
 @property (nonatomic) CGAffineTransform importTranslation, importRotation, importScale;
 
+- (void)updateImagePreview;
+- (void)generateFinalImage;
 
 - (IBAction)selectExistingPhoto:(id)sender;
 

@@ -16,10 +16,9 @@
 
 @implementation ViewController
 
-@synthesize myimage;
-@synthesize importedImageView;
+@synthesize importedImageView, previewImageView;
+@synthesize finalImage;
 @synthesize importTranslation, importRotation, importScale;
-
 
 
 - (void)viewDidLoad
@@ -36,7 +35,106 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return NO; //(interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (void) viewWillAppear:(BOOL)animated 
+{
+    self.importTranslation = CGAffineTransformIdentity;
+    self.importRotation = CGAffineTransformMakeRotation(M_PI_2);
+    self.importScale = CGAffineTransformIdentity;
+    
+    self.importedImageView.transform = CGAffineTransformIdentity;
+    
+    self.importedImageView.hidden = NO;
+        
+    self.importedImageView.transform = CGAffineTransformMakeRotation(M_PI_2);
+    
+    [self generateFinalImage];
+}
+
+
+#pragma mark Image Manipulation Methods
+
+- (void)updateImagePreview
+{
+    CGAffineTransform t = CGAffineTransformIdentity;
+    CGSize size = self.importedImageView.image.size;
+    t = CGAffineTransformTranslate(t, -size.width/2.0, -size.height/2.0);
+    t = CGAffineTransformConcat(t, self.importRotation);
+    t = CGAffineTransformConcat(t, self.importScale);
+    t = CGAffineTransformConcat(t, self.importTranslation);
+    t = CGAffineTransformTranslate(t, +size.width/2.0, +size.height/2.0);
+    
+    self.importedImageView.transform = t;
+    
+    [self generateFinalImage];
+}
+
+-(void)generateFinalImage
+{    
+    self.finalImage = self.importedImageView.image;
+    
+    // self.finalImage = [self.finalImage imageRotatedByDegrees:90.0f];
+    
+    CIImage *ciImage = [[CIImage alloc] initWithImage:self.finalImage];
+    CGSize size = self.finalImage.size;
+    CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
+    
+    CGAffineTransform t = CGAffineTransformIdentity;
+
+    float heightRatio = 640.0/480.0;
+    float widthRatio  = 852.0/640.0;
+    
+    t = CGAffineTransformTranslate(t, +size.width/2.0, +size.height/2.0);
+    
+    t = CGAffineTransformScale(t, 1.0, -1.0);
+        t = CGAffineTransformConcat(self.importTranslation, t);
+    t = CGAffineTransformScale(t, 1.0, -1.0);
+    
+    t = CGAffineTransformConcat(self.importScale, t);
+    
+    t = CGAffineTransformScale(t, -1.0, 1.0);
+        t = CGAffineTransformConcat(self.importRotation, t);
+    t = CGAffineTransformScale(t, -1.0, 1.0);
+    
+    t = CGAffineTransformTranslate(t, -size.width/2.0, -size.height/2.0);
+    
+    ciImage = [ciImage imageByApplyingTransform:t];
+    
+    CIContext *context = [CIContext contextWithOptions:nil];
+    
+    CIFilter *constantColorGenerator = [CIFilter filterWithName:@"CIConstantColorGenerator"];
+    CIColor *backgroundColor = [CIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+    [constantColorGenerator setValue:backgroundColor forKey:@"inputColor"];
+    
+    // CGSize targetSize = CGSizeMake(852.0, 640.0);
+    //CGSize targetSize = CGSizeMake(640.0, 852.0);
+    //
+    //rect = CGRectMake(0.0, 0.0, targetSize.width, targetSize.height);    
+
+    CGSize targetSize = CGSizeMake(640.0, 480.0);
+    rect = CGRectMake(0.0, 0.0, targetSize.width, targetSize.height);
+    CGAffineTransform scaleAndRotate = CGAffineTransformIdentity;
+    scaleAndRotate = CGAffineTransformTranslate(scaleAndRotate, +size.width/2.0, +size.height/2.0);
+    scaleAndRotate = CGAffineTransformScale(scaleAndRotate, 3.0/4.0, 3.0/4.0);
+    scaleAndRotate = CGAffineTransformRotate(scaleAndRotate, M_PI_2);
+    scaleAndRotate = CGAffineTransformTranslate(scaleAndRotate, -size.width/2.0, -size.height/2.0);
+
+    CIImage *finalCIImage = [ciImage imageByApplyingTransform:scaleAndRotate];
+
+    CGImageRef ref = [context createCGImage:finalCIImage fromRect:rect];
+    
+    //CGImageRef ref = [context createCGImage:ciImage fromRect:rect];
+    
+    UIImage *transformedImage = [UIImage imageWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
+    CGImageRelease(ref);
+    
+    self.finalImage = transformedImage;
+    
+    self.finalImage = [self.finalImage imageRotatedByDegrees:90.0f];
+    
+    self.previewImageView.image = self.finalImage;
 }
 
 
@@ -52,11 +150,7 @@
     
 	UIImage *image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
     
-    self.myimage = image;
-
-    self.myimage = [self.myimage imageRotatedByDegrees:90.0f];
-    
-    self.importedImageView.image = self.myimage;
+    self.importedImageView.image = image;
     
     NSLog(@"Done picking imagePickerController");
     
@@ -85,32 +179,33 @@
 
 - (IBAction)handlePanGesture:(UIPanGestureRecognizer *)sender
 {
+    // NSLog(@"handlePanGesture");
+    
     CGPoint translation = [sender translationInView:sender.view];
     self.importTranslation = CGAffineTransformTranslate(self.importTranslation, translation.x, translation.y);
     [sender setTranslation:CGPointZero inView:sender.view];
-    
-    NSLog(@"asdfasdfsd");
-    
-    //[self updateImportPreview];
+        
+    [self updateImagePreview];
 }
 
 - (IBAction)handlePinchGesture:(UIPinchGestureRecognizer *)sender
 {
-    //    CGPoint location = [sender locationInView:sender.view];//self.importPreviewBackImageView
-    //    self.importScale = CGAffineTransformTranslate(self.importScale, -location.x/2.0, -location.y/2.0);
+    // NSLog(@"handlePinchGesture");
+
     self.importScale = CGAffineTransformScale(self.importScale, sender.scale, sender.scale);
-    //    self.importScale = CGAffineTransformTranslate(self.importScale, +location.x/2.0, +location.y/2.0);
     [sender setScale:1.0];
     
-    //[self updateImportPreview];
+    [self updateImagePreview];
 }
 
 - (IBAction)handleRotationGesture:(UIRotationGestureRecognizer *)sender
 {
+    // NSLog(@"handleRotationGesture");
+    
     self.importRotation = CGAffineTransformRotate(self.importRotation, sender.rotation);
     [sender setRotation:0.0];
     
-    //[self updateImportPreview];
+    [self updateImagePreview];
 }
 
 @end
