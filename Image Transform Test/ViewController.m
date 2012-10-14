@@ -77,13 +77,12 @@
     
     unsigned long bufferLength = imageSize.width * imageSize.height * 4;
     unsigned char *bitmap = (unsigned char *) malloc(bufferLength);
-    memset(bitmap, 0, bufferLength);
+    memset(bitmap, 255, bufferLength);
     
     CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, 
                                                               bitmap, 
                                                               bufferLength, 
                                                               NULL);
-    
     int bitsPerComponent = 8;
     int bitsPerPixel = 32;
     int bytesPerRow = 4 * imageSize.width;
