@@ -71,69 +71,112 @@
     [self generateFinalImage];
 }
 
+-(UIImage *)createBlankImageWithSize:(CGSize)imageSize
+{
+    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+    
+    unsigned long bufferLength = imageSize.width * imageSize.height * 4;
+    unsigned char *bitmap = (unsigned char *) malloc(bufferLength);
+    memset(bitmap, 0, bufferLength);
+    
+    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, 
+                                                              bitmap, 
+                                                              bufferLength, 
+                                                              NULL);
+    
+    int bitsPerComponent = 8;
+    int bitsPerPixel = 32;
+    int bytesPerRow = 4 * imageSize.width;
+    
+    CGImageRef imageRef = CGImageCreate(imageSize.width, 
+                                        imageSize.height, 
+                                        bitsPerComponent, 
+                                        bitsPerPixel, 
+                                        bytesPerRow, 
+                                        colorSpaceRef, 
+                                        kCGBitmapByteOrderDefault | kCGImageAlphaLast, 
+                                        provider, 
+                                        NULL, 
+                                        NO, 
+                                        kCGRenderingIntentDefault);
+
+    UIImage *blankImage = [UIImage imageWithCGImage:imageRef];
+
+    free(bitmap);
+    CGColorSpaceRelease(colorSpaceRef);
+    CGDataProviderRelease(provider);
+    CGImageRelease(imageRef);
+    
+    return blankImage;
+}
+
+// final image size must be 640x480
 -(void)generateFinalImage
-{    
-    self.finalImage = self.importedImageView.image;
+{   
+    float rotatableCanvasWidth = 640.0f;
+    float rotatableCanvasHeight = 852.0f;
     
-    // self.finalImage = [self.finalImage imageRotatedByDegrees:90.0f];
-    
-    CIImage *ciImage = [[CIImage alloc] initWithImage:self.finalImage];
-    CGSize size = self.finalImage.size;
-    CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
-    
-    CGAffineTransform t = CGAffineTransformIdentity;
+    float finalImageWidth = 640.0f;
+    float finalImageHeight = 480.0f;
 
-    float heightRatio = 640.0/480.0;
-    float widthRatio  = 852.0/640.0;
+    // create blank image of 640x852 (not 852x640)
     
-    t = CGAffineTransformTranslate(t, +size.width/2.0, +size.height/2.0);
+    self.finalImage = [self createBlankImageWithSize:CGSizeMake(rotatableCanvasWidth, rotatableCanvasHeight)];        
     
-    t = CGAffineTransformScale(t, 1.0, -1.0);
-        t = CGAffineTransformConcat(self.importTranslation, t);
-    t = CGAffineTransformScale(t, 1.0, -1.0);
-    
-    t = CGAffineTransformConcat(self.importScale, t);
-    
-    t = CGAffineTransformScale(t, -1.0, 1.0);
-        t = CGAffineTransformConcat(self.importRotation, t);
-    t = CGAffineTransformScale(t, -1.0, 1.0);
-    
-    t = CGAffineTransformTranslate(t, -size.width/2.0, -size.height/2.0);
-    
-    ciImage = [ciImage imageByApplyingTransform:t];
-    
-    CIContext *context = [CIContext contextWithOptions:nil];
-    
-    CIFilter *constantColorGenerator = [CIFilter filterWithName:@"CIConstantColorGenerator"];
-    CIColor *backgroundColor = [CIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
-    [constantColorGenerator setValue:backgroundColor forKey:@"inputColor"];
-    
-    // CGSize targetSize = CGSizeMake(852.0, 640.0);
-    //CGSize targetSize = CGSizeMake(640.0, 852.0);
-    //
-    //rect = CGRectMake(0.0, 0.0, targetSize.width, targetSize.height);    
-
-    CGSize targetSize = CGSizeMake(640.0, 480.0);
-    rect = CGRectMake(0.0, 0.0, targetSize.width, targetSize.height);
-    CGAffineTransform scaleAndRotate = CGAffineTransformIdentity;
-    scaleAndRotate = CGAffineTransformTranslate(scaleAndRotate, +size.width/2.0, +size.height/2.0);
-    scaleAndRotate = CGAffineTransformScale(scaleAndRotate, 3.0/4.0, 3.0/4.0);
-    scaleAndRotate = CGAffineTransformRotate(scaleAndRotate, M_PI_2);
-    scaleAndRotate = CGAffineTransformTranslate(scaleAndRotate, -size.width/2.0, -size.height/2.0);
-
-    CIImage *finalCIImage = [ciImage imageByApplyingTransform:scaleAndRotate];
-
-    CGImageRef ref = [context createCGImage:finalCIImage fromRect:rect];
-    
-    //CGImageRef ref = [context createCGImage:ciImage fromRect:rect];
-    
-    UIImage *transformedImage = [UIImage imageWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
-    CGImageRelease(ref);
-    
-    self.finalImage = transformedImage;
-    
-    self.finalImage = [self.finalImage imageRotatedByDegrees:90.0f];
-    
+//    self.finalImage = self.importedImageView.image;
+//        
+//    CIImage *ciImage = [[CIImage alloc] initWithImage:self.finalImage];
+//    CGSize size = self.finalImage.size;
+//    CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
+//    
+//    CGAffineTransform t = CGAffineTransformIdentity;
+//
+//    float heightRatio = rotatableCanvasHeight / finalImageHeight;    // iPhone 4(S) import image area is 852x640
+//    float widthRatio  = rotatableCanvasWidth / finalImageWidth;
+//    
+//    t = CGAffineTransformTranslate(t, +size.width/2.0, +size.height/2.0);
+//    
+//    t = CGAffineTransformScale(t, 1.0, -1.0);
+//        t = CGAffineTransformConcat(self.importTranslation, t);
+//    t = CGAffineTransformScale(t, 1.0, -1.0);
+//    
+//    t = CGAffineTransformConcat(self.importScale, t);
+//    
+//    t = CGAffineTransformScale(t, -1.0, 1.0);
+//        t = CGAffineTransformConcat(self.importRotation, t);
+//    t = CGAffineTransformScale(t, -1.0, 1.0);
+//    
+//    t = CGAffineTransformTranslate(t, -size.width/2.0, -size.height/2.0);
+//    
+//    ciImage = [ciImage imageByApplyingTransform:t];
+//    
+//    CIContext *context = [CIContext contextWithOptions:nil];
+//    
+//    CIFilter *constantColorGenerator = [CIFilter filterWithName:@"CIConstantColorGenerator"];
+//    CIColor *backgroundColor = [CIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0];
+//    [constantColorGenerator setValue:backgroundColor forKey:@"inputColor"];
+//
+//    CGSize targetSize = CGSizeMake(640.0, 480.0);
+//    rect = CGRectMake(0.0, 0.0, targetSize.width, targetSize.height);
+//    CGAffineTransform scaleAndRotate = CGAffineTransformIdentity;
+//    scaleAndRotate = CGAffineTransformTranslate(scaleAndRotate, +size.width/2.0, +size.height/2.0);
+//    scaleAndRotate = CGAffineTransformScale(scaleAndRotate, 3.0/4.0, 3.0/4.0);
+//    scaleAndRotate = CGAffineTransformRotate(scaleAndRotate, M_PI_2);
+//    scaleAndRotate = CGAffineTransformTranslate(scaleAndRotate, -size.width/2.0, -size.height/2.0);
+//
+//    CIImage *finalCIImage = [ciImage imageByApplyingTransform:scaleAndRotate];
+//
+//    CGImageRef ref = [context createCGImage:finalCIImage fromRect:rect];
+//    
+//    //CGImageRef ref = [context createCGImage:ciImage fromRect:rect];
+//    
+//    UIImage *transformedImage = [UIImage imageWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
+//    CGImageRelease(ref);
+//    
+//    self.finalImage = transformedImage;
+//    
+//    self.finalImage = [self.finalImage imageRotatedByDegrees:90.0f];
+//    
     self.previewImageView.image = self.finalImage;
 }
 
