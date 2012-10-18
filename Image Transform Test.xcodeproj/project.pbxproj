@@ -20,6 +20,8 @@
 		947E87AF1621696100795538 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 947E87AE1621696100795538 /* CoreImage.framework */; };
 		947E87B1162169A900795538 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 947E87B0162169A900795538 /* MobileCoreServices.framework */; };
 		94C40C6F1628CEE50096C817 /* UIImage+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C40C6D1628CA800096C817 /* UIImage+Extensions.m */; };
+		94E57DAA162ABD790004333A /* SSM-Elevator.png in Resources */ = {isa = PBXBuildFile; fileRef = 94E57DA9162ABD790004333A /* SSM-Elevator.png */; };
+		94E57DB0162AD10D0004333A /* UIImageView+ImageScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 94E57DAF162AD10D0004333A /* UIImageView+ImageScale.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,9 @@
 		947E87B0162169A900795538 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		94C40C6C1628CA800096C817 /* UIImage+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Extensions.h"; sourceTree = "<group>"; };
 		94C40C6D1628CA800096C817 /* UIImage+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Extensions.m"; sourceTree = "<group>"; };
+		94E57DA9162ABD790004333A /* SSM-Elevator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SSM-Elevator.png"; sourceTree = "<group>"; };
+		94E57DAE162AD10D0004333A /* UIImageView+ImageScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+ImageScale.h"; sourceTree = "<group>"; };
+		94E57DAF162AD10D0004333A /* UIImageView+ImageScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+ImageScale.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +103,7 @@
 		947E87911621651500795538 /* Image Transform Test */ = {
 			isa = PBXGroup;
 			children = (
+				94E57DA9162ABD790004333A /* SSM-Elevator.png */,
 				947E879A1621651500795538 /* AppDelegate.h */,
 				947E879B1621651500795538 /* AppDelegate.m */,
 				947E879D1621651500795538 /* ViewController.h */,
@@ -106,6 +112,8 @@
 				94C40C6C1628CA800096C817 /* UIImage+Extensions.h */,
 				94C40C6D1628CA800096C817 /* UIImage+Extensions.m */,
 				947E87921621651500795538 /* Supporting Files */,
+				94E57DAE162AD10D0004333A /* UIImageView+ImageScale.h */,
+				94E57DAF162AD10D0004333A /* UIImageView+ImageScale.m */,
 			);
 			path = "Image Transform Test";
 			sourceTree = "<group>";
@@ -174,6 +182,7 @@
 			files = (
 				947E87961621651500795538 /* InfoPlist.strings in Resources */,
 				947E87A21621651500795538 /* ViewController.xib in Resources */,
+				94E57DAA162ABD790004333A /* SSM-Elevator.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,6 +197,7 @@
 				947E87981621651500795538 /* main.m in Sources */,
 				947E879C1621651500795538 /* AppDelegate.m in Sources */,
 				947E879F1621651500795538 /* ViewController.m in Sources */,
+				94E57DB0162AD10D0004333A /* UIImageView+ImageScale.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

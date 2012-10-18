@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "UIImage+Extensions.h"
+#import "UIImageView+ImageScale.h"
 
 
 @interface ViewController ()
@@ -109,6 +110,77 @@
     return blankImage;
 }
 
+
+-(UIImage *)makeUIImageFromCIImage:(CIImage*)ciImage
+{
+    CIContext *context = [CIContext contextWithOptions:nil];
+    
+    CGImageRef processedCGImage = [context createCGImage:ciImage 
+                                                  fromRect:[ciImage extent]];
+    
+    UIImage *returnImage = [UIImage imageWithCGImage:processedCGImage];
+    CGImageRelease(processedCGImage);
+    
+    return returnImage;
+}
+
+
+// Resizes the image according to the given content mode, taking into account the image's orientation
+- (UIImage *)resizedImageWithContentMode:(UIViewContentMode)contentMode 
+                            imageToScale:(UIImage*)imageToScale 
+                                  bounds:(CGSize)bounds 
+                    interpolationQuality:(CGInterpolationQuality)quality 
+{
+    //Get the size we want to scale it to
+    CGFloat horizontalRatio = bounds.width / imageToScale.size.width;
+    CGFloat verticalRatio = bounds.height / imageToScale.size.height;
+    CGFloat ratio;
+    
+    switch (contentMode) {
+        case UIViewContentModeScaleAspectFill:
+            ratio = MAX(horizontalRatio, verticalRatio);
+            break;
+            
+        case UIViewContentModeScaleAspectFit:
+            ratio = MIN(horizontalRatio, verticalRatio);
+            break;
+            
+        default:
+            [NSException raise:NSInvalidArgumentException format:@"Unsupported content mode: %d", contentMode];
+    }
+    
+    //...and here it is
+    CGSize newSize = CGSizeMake(imageToScale.size.width * ratio, imageToScale.size.height * ratio);
+    
+    
+    //start scaling it
+    CGRect newRect = CGRectIntegral(CGRectMake(0, 0, newSize.width, newSize.height));
+    CGImageRef imageRef = imageToScale.CGImage;
+    CGContextRef bitmap = CGBitmapContextCreate(NULL,
+                                                newRect.size.width,
+                                                newRect.size.height,
+                                                CGImageGetBitsPerComponent(imageRef),
+                                                0,
+                                                CGImageGetColorSpace(imageRef),
+                                                CGImageGetBitmapInfo(imageRef));
+    
+    CGContextSetInterpolationQuality(bitmap, quality);
+    
+    // Draw into the context; this scales the image
+    CGContextDrawImage(bitmap, newRect, imageRef);
+    
+    // Get the resized image from the context and a UIImage
+    CGImageRef newImageRef = CGBitmapContextCreateImage(bitmap);
+    UIImage *newImage = [UIImage imageWithCGImage:newImageRef];
+    
+    // Clean up
+    CGContextRelease(bitmap);
+    CGImageRelease(newImageRef);
+    
+    return newImage;
+}
+
+
 // final image size must be 640x480
 -(void)generateFinalImage
 {   
@@ -120,10 +192,14 @@
 
     // create blank image of 640x852 (not 852x640)
     
+    CGSize tmp = [self.importedImageView imageScale];
+    NSLog(@"width = %f, height = %f", tmp.width, tmp.height);
+    
     self.finalImage = [self createBlankImageWithSize:CGSizeMake(rotatableCanvasWidth, rotatableCanvasHeight)];        
     
-//    self.finalImage = self.importedImageView.image;
-//        
+    CIImage *ciImage = [CIImage imageWithCGImage:self.finalImage.CGImage];
+    self.finalImage = [self makeUIImageFromCIImage:ciImage];
+    
 //    CIImage *ciImage = [[CIImage alloc] initWithImage:self.finalImage];
 //    CGSize size = self.finalImage.size;
 //    CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
