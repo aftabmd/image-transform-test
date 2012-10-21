@@ -19,8 +19,15 @@
 		947E87AB1621693D00795538 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 947E87AA1621693D00795538 /* AssetsLibrary.framework */; };
 		947E87AF1621696100795538 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 947E87AE1621696100795538 /* CoreImage.framework */; };
 		947E87B1162169A900795538 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 947E87B0162169A900795538 /* MobileCoreServices.framework */; };
+		94BC2C0A16338137008A2D5A /* UIImage+Resize.h in Sources */ = {isa = PBXBuildFile; fileRef = 94BC2C0616337E48008A2D5A /* UIImage+Resize.h */; };
+		94BC2C0B16338137008A2D5A /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BC2C0716337E48008A2D5A /* UIImage+Resize.m */; };
+		94BC2C0C16338145008A2D5A /* UIImage+Extensions.h in Sources */ = {isa = PBXBuildFile; fileRef = 94C40C6C1628CA800096C817 /* UIImage+Extensions.h */; };
+		94BC2C0D16338145008A2D5A /* UIImageView+ImageScale.h in Sources */ = {isa = PBXBuildFile; fileRef = 94E57DAE162AD10D0004333A /* UIImageView+ImageScale.h */; };
+		94BC2C1E1633819E008A2D5A /* UIImage+Alpha.h in Sources */ = {isa = PBXBuildFile; fileRef = 94BC2C1A1633817E008A2D5A /* UIImage+Alpha.h */; };
+		94BC2C1F1633819E008A2D5A /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BC2C1B1633817E008A2D5A /* UIImage+Alpha.m */; };
+		94BC2C201633819E008A2D5A /* UIImage+RoundedCorner.h in Sources */ = {isa = PBXBuildFile; fileRef = 94BC2C1C16338196008A2D5A /* UIImage+RoundedCorner.h */; };
+		94BC2C211633819E008A2D5A /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BC2C1D16338196008A2D5A /* UIImage+RoundedCorner.m */; };
 		94C40C6F1628CEE50096C817 /* UIImage+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C40C6D1628CA800096C817 /* UIImage+Extensions.m */; };
-		94E57DAA162ABD790004333A /* SSM-Elevator.png in Resources */ = {isa = PBXBuildFile; fileRef = 94E57DA9162ABD790004333A /* SSM-Elevator.png */; };
 		94E57DB0162AD10D0004333A /* UIImageView+ImageScale.m in Sources */ = {isa = PBXBuildFile; fileRef = 94E57DAF162AD10D0004333A /* UIImageView+ImageScale.m */; };
 /* End PBXBuildFile section */
 
@@ -43,9 +50,14 @@
 		947E87AC1621695700795538 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		947E87AE1621696100795538 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		947E87B0162169A900795538 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		94BC2C0616337E48008A2D5A /* UIImage+Resize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
+		94BC2C0716337E48008A2D5A /* UIImage+Resize.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
+		94BC2C1A1633817E008A2D5A /* UIImage+Alpha.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
+		94BC2C1B1633817E008A2D5A /* UIImage+Alpha.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Alpha.m"; sourceTree = "<group>"; };
+		94BC2C1C16338196008A2D5A /* UIImage+RoundedCorner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCorner.h"; sourceTree = "<group>"; };
+		94BC2C1D16338196008A2D5A /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
 		94C40C6C1628CA800096C817 /* UIImage+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Extensions.h"; sourceTree = "<group>"; };
 		94C40C6D1628CA800096C817 /* UIImage+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Extensions.m"; sourceTree = "<group>"; };
-		94E57DA9162ABD790004333A /* SSM-Elevator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SSM-Elevator.png"; sourceTree = "<group>"; };
 		94E57DAE162AD10D0004333A /* UIImageView+ImageScale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+ImageScale.h"; sourceTree = "<group>"; };
 		94E57DAF162AD10D0004333A /* UIImageView+ImageScale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+ImageScale.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -103,17 +115,13 @@
 		947E87911621651500795538 /* Image Transform Test */ = {
 			isa = PBXGroup;
 			children = (
-				94E57DA9162ABD790004333A /* SSM-Elevator.png */,
+				94BC2C0916337F19008A2D5A /* Categories */,
 				947E879A1621651500795538 /* AppDelegate.h */,
 				947E879B1621651500795538 /* AppDelegate.m */,
 				947E879D1621651500795538 /* ViewController.h */,
 				947E879E1621651500795538 /* ViewController.m */,
 				947E87A01621651500795538 /* ViewController.xib */,
-				94C40C6C1628CA800096C817 /* UIImage+Extensions.h */,
-				94C40C6D1628CA800096C817 /* UIImage+Extensions.m */,
 				947E87921621651500795538 /* Supporting Files */,
-				94E57DAE162AD10D0004333A /* UIImageView+ImageScale.h */,
-				94E57DAF162AD10D0004333A /* UIImageView+ImageScale.m */,
 			);
 			path = "Image Transform Test";
 			sourceTree = "<group>";
@@ -127,6 +135,23 @@
 				947E87991621651500795538 /* Image Transform Test-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		94BC2C0916337F19008A2D5A /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				94BC2C1A1633817E008A2D5A /* UIImage+Alpha.h */,
+				94BC2C1B1633817E008A2D5A /* UIImage+Alpha.m */,
+				94BC2C1C16338196008A2D5A /* UIImage+RoundedCorner.h */,
+				94BC2C1D16338196008A2D5A /* UIImage+RoundedCorner.m */,
+				94C40C6C1628CA800096C817 /* UIImage+Extensions.h */,
+				94C40C6D1628CA800096C817 /* UIImage+Extensions.m */,
+				94BC2C0616337E48008A2D5A /* UIImage+Resize.h */,
+				94BC2C0716337E48008A2D5A /* UIImage+Resize.m */,
+				94E57DAE162AD10D0004333A /* UIImageView+ImageScale.h */,
+				94E57DAF162AD10D0004333A /* UIImageView+ImageScale.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -182,7 +207,6 @@
 			files = (
 				947E87961621651500795538 /* InfoPlist.strings in Resources */,
 				947E87A21621651500795538 /* ViewController.xib in Resources */,
-				94E57DAA162ABD790004333A /* SSM-Elevator.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +217,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94BC2C1E1633819E008A2D5A /* UIImage+Alpha.h in Sources */,
+				94BC2C1F1633819E008A2D5A /* UIImage+Alpha.m in Sources */,
+				94BC2C201633819E008A2D5A /* UIImage+RoundedCorner.h in Sources */,
+				94BC2C211633819E008A2D5A /* UIImage+RoundedCorner.m in Sources */,
+				94BC2C0C16338145008A2D5A /* UIImage+Extensions.h in Sources */,
+				94BC2C0D16338145008A2D5A /* UIImageView+ImageScale.h in Sources */,
+				94BC2C0A16338137008A2D5A /* UIImage+Resize.h in Sources */,
+				94BC2C0B16338137008A2D5A /* UIImage+Resize.m in Sources */,
 				94C40C6F1628CEE50096C817 /* UIImage+Extensions.m in Sources */,
 				947E87981621651500795538 /* main.m in Sources */,
 				947E879C1621651500795538 /* AppDelegate.m in Sources */,

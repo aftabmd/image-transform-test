@@ -15,6 +15,8 @@
 
 @property (retain, nonatomic) IBOutlet UIImageView *previewImageView;
 @property (retain, nonatomic) IBOutlet UIImageView *importedImageView;
+
+@property (retain, nonatomic) UIImage *importedRawImage;
 @property (retain, nonatomic) UIImage *finalImage;
 
 @property (nonatomic) CGAffineTransform importTranslation, importRotation, importScale;
