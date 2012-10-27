@@ -142,73 +142,6 @@
 }
 
 
-//// final image size must be 640x480
-//-(void)generateFinalImage
-//{   
-////    float rotatableCanvasWidth = 852.0f;        // iPhone 4 editable screen area
-////    float rotatableCanvasHeight = 640.0f;
-////    
-////    float finalImageWidth = 640.0f;             // final image size
-////    float finalImageHeight = 480.0f;
-//    
-//    UIImage *tmp = self.importedRawImage;
-//    
-//    tmp = [tmp imageRotatedByDegrees:90.0f];
-//    
-//    CIImage *ciImage = [[CIImage alloc] initWithImage:tmp];
-//    CGSize size = self.importedRawImage.size;
-//
-//    CGAffineTransform t = CGAffineTransformIdentity;
-//    t = CGAffineTransformTranslate(t, +size.width/2.0, +size.height/2.0);
-//    
-//    t = CGAffineTransformScale(t, 1.0, -1.0);
-//        t = CGAffineTransformConcat(self.importTranslation, t);
-//    
-//    t = CGAffineTransformScale(t, 1.0, -1.0);
-//        t = CGAffineTransformConcat(self.importScale, t);
-//        
-//    t = CGAffineTransformScale(t, -1.0, 1.0);
-//        t = CGAffineTransformConcat(self.importRotation, t);
-//    
-//    //t = CGAffineTransformScale(t, -1.0, 1.0);
-//    //    t = CGAffineTransformTranslate(t, -size.width/2.0, -size.height/2.0);
-//
-//    //ciImage = [ciImage imageByApplyingTransform:t];
-//    
-//    
-//    
-//    CIContext *context = [CIContext contextWithOptions:nil];
-//    CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
-//    
-//    CIFilter *constantColorGenerator = [CIFilter filterWithName:@"CIConstantColorGenerator"];
-//    CIColor *backgroundColor = [CIColor colorWithRed:01.0 green:01.0 blue:01.0 alpha:1.0];
-//    [constantColorGenerator setValue:backgroundColor forKey:@"inputColor"];
-//    
-//    CIFilter *sourceOverComposite = [CIFilter filterWithName:@"CISourceOverCompositing"];
-//    [sourceOverComposite setValue:[constantColorGenerator valueForKey:@"outputImage"] forKey:@"inputBackgroundImage"];
-//    [sourceOverComposite setValue:ciImage forKey:@"inputImage"];
-//    CIImage *outImage = [sourceOverComposite valueForKey:@"outputImage"];
-//    
-//    //CGSize targetSize = CGSizeMake(640.0, 480.0);
-//    //rect = CGRectMake(0.0, 0.0, targetSize.width, targetSize.height);
-//    
-//    //CGAffineTransform scaleAndRotate = CGAffineTransformIdentity;
-//    //scaleAndRotate = CGAffineTransformRotate(scaleAndRotate, M_PI_2);
-//
-//    //CIImage *finalImage = [outImage imageByApplyingTransform:scaleAndRotate];
-//    
-//    CGImageRef ref = [context createCGImage:ciImage fromRect:rect];
-//    self.finalImage = [UIImage imageWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
-//    CGImageRelease(ref);
-//    
-//    NSLog(@"width = %f, height = %f", self.finalImage.size.width, self.finalImage.size.height);
-//    
-//    // just for preview window
-//    self.finalImage = [self.finalImage resizedImage:CGSizeMake(100.0f, 134.0f) interpolationQuality:kCGInterpolationHigh];
-//    
-//    self.previewImageView.image = self.finalImage;  // preview for debug purposes
-//}
-
 - (UIImage *)padImage:(UIImage *)img to:(CGSize)size
 {
     size.width = MAX(size.width, img.size.width);
@@ -232,7 +165,7 @@
 
 // final image size must be 640x480
 - (void)generateFinalImage
-{
+{    
     float rotatableCanvasWidth = self.importedImageView.bounds.size.height;
     float rotatableCanvasHeight = self.importedImageView.bounds.size.width;
     UIImage *tmp = self.importedRawImage;
@@ -284,9 +217,20 @@
     
     image = [image fixOrientation];
     
-    self.importedRawImage = image;
-    
+    self.importedImageView.contentMode = UIViewContentModeScaleAspectFill;  // little bit of a hacky sacky
     self.importedImageView.image = image;
+    
+    CGSize scaling = [self.importedImageView imageScale];
+    
+    NSLog(NSStringFromCGSize(scaling));
+    
+    image = [image resizedImage:CGSizeMake(image.size.width * scaling.width, image.size.height * scaling.height) 
+           interpolationQuality:kCGInterpolationHigh];
+    
+    self.importedImageView.contentMode = UIViewContentModeCenter;
+    self.importedImageView.image = image;
+    
+    self.importedRawImage = image;
     
     NSLog(@"Done picking imagePickerController");
     
