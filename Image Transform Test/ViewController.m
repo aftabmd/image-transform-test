@@ -233,8 +233,8 @@
 // final image size must be 640x480
 - (void)generateFinalImage
 {
-    float rotatableCanvasWidth = 426.0;
-    float rotatableCanvasHeight = 320.0;
+    float rotatableCanvasWidth = self.importedImageView.bounds.size.height;
+    float rotatableCanvasHeight = self.importedImageView.bounds.size.width;
     UIImage *tmp = self.importedRawImage;
     
     CGSize size = self.importedRawImage.size;
