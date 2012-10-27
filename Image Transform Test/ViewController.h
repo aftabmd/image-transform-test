@@ -21,6 +21,8 @@
 
 @property (nonatomic) CGAffineTransform importTranslation, importRotation, importScale;
 
+@property float scaleAmount;
+
 - (void)updateImagePreview;
 - (void)generateFinalImage;
 

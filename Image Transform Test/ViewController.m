@@ -21,6 +21,7 @@
 @synthesize importedImageView, previewImageView;
 @synthesize finalImage, importedRawImage;
 @synthesize importTranslation, importRotation, importScale;
+@synthesize scaleAmount;
 
 
 - (void)viewDidLoad
@@ -141,68 +142,127 @@
 }
 
 
-// final image size must be 640x480
--(void)generateFinalImage
-{   
-//    float rotatableCanvasWidth = 852.0f;        // iPhone 4 editable screen area
-//    float rotatableCanvasHeight = 640.0f;
+//// final image size must be 640x480
+//-(void)generateFinalImage
+//{   
+////    float rotatableCanvasWidth = 852.0f;        // iPhone 4 editable screen area
+////    float rotatableCanvasHeight = 640.0f;
+////    
+////    float finalImageWidth = 640.0f;             // final image size
+////    float finalImageHeight = 480.0f;
 //    
-//    float finalImageWidth = 640.0f;             // final image size
-//    float finalImageHeight = 480.0f;
+//    UIImage *tmp = self.importedRawImage;
+//    
+//    tmp = [tmp imageRotatedByDegrees:90.0f];
+//    
+//    CIImage *ciImage = [[CIImage alloc] initWithImage:tmp];
+//    CGSize size = self.importedRawImage.size;
+//
+//    CGAffineTransform t = CGAffineTransformIdentity;
+//    t = CGAffineTransformTranslate(t, +size.width/2.0, +size.height/2.0);
+//    
+//    t = CGAffineTransformScale(t, 1.0, -1.0);
+//        t = CGAffineTransformConcat(self.importTranslation, t);
+//    
+//    t = CGAffineTransformScale(t, 1.0, -1.0);
+//        t = CGAffineTransformConcat(self.importScale, t);
+//        
+//    t = CGAffineTransformScale(t, -1.0, 1.0);
+//        t = CGAffineTransformConcat(self.importRotation, t);
+//    
+//    //t = CGAffineTransformScale(t, -1.0, 1.0);
+//    //    t = CGAffineTransformTranslate(t, -size.width/2.0, -size.height/2.0);
+//
+//    //ciImage = [ciImage imageByApplyingTransform:t];
+//    
+//    
+//    
+//    CIContext *context = [CIContext contextWithOptions:nil];
+//    CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
+//    
+//    CIFilter *constantColorGenerator = [CIFilter filterWithName:@"CIConstantColorGenerator"];
+//    CIColor *backgroundColor = [CIColor colorWithRed:01.0 green:01.0 blue:01.0 alpha:1.0];
+//    [constantColorGenerator setValue:backgroundColor forKey:@"inputColor"];
+//    
+//    CIFilter *sourceOverComposite = [CIFilter filterWithName:@"CISourceOverCompositing"];
+//    [sourceOverComposite setValue:[constantColorGenerator valueForKey:@"outputImage"] forKey:@"inputBackgroundImage"];
+//    [sourceOverComposite setValue:ciImage forKey:@"inputImage"];
+//    CIImage *outImage = [sourceOverComposite valueForKey:@"outputImage"];
+//    
+//    //CGSize targetSize = CGSizeMake(640.0, 480.0);
+//    //rect = CGRectMake(0.0, 0.0, targetSize.width, targetSize.height);
+//    
+//    //CGAffineTransform scaleAndRotate = CGAffineTransformIdentity;
+//    //scaleAndRotate = CGAffineTransformRotate(scaleAndRotate, M_PI_2);
+//
+//    //CIImage *finalImage = [outImage imageByApplyingTransform:scaleAndRotate];
+//    
+//    CGImageRef ref = [context createCGImage:ciImage fromRect:rect];
+//    self.finalImage = [UIImage imageWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
+//    CGImageRelease(ref);
+//    
+//    NSLog(@"width = %f, height = %f", self.finalImage.size.width, self.finalImage.size.height);
+//    
+//    // just for preview window
+//    self.finalImage = [self.finalImage resizedImage:CGSizeMake(100.0f, 134.0f) interpolationQuality:kCGInterpolationHigh];
+//    
+//    self.previewImageView.image = self.finalImage;  // preview for debug purposes
+//}
+
+- (UIImage *)padImage:(UIImage *)img to:(CGSize)size
+{
+    size.width = MAX(size.width, img.size.width);
+    size.height = MAX(size.height, img.size.height);
     
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast);
+    
+    CGRect centeredRect = CGRectMake((size.width - img.size.width)/2.0, (size.height - img.size.height)/2.0, img.size.width, img.size.height);
+    CGContextDrawImage(context, centeredRect, [img CGImage]);
+    
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    
+    UIImage *paddedImage = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    return paddedImage;
+}
+
+// final image size must be 640x480
+- (void)generateFinalImage
+{
+    float rotatableCanvasWidth = 426.0;
+    float rotatableCanvasHeight = 320.0;
     UIImage *tmp = self.importedRawImage;
     
-    tmp = [tmp imageRotatedByDegrees:90.0f];
-    
-    CIImage *ciImage = [[CIImage alloc] initWithImage:tmp];
     CGSize size = self.importedRawImage.size;
-
-    CGAffineTransform t = CGAffineTransformIdentity;
-    t = CGAffineTransformTranslate(t, +size.width/2.0, +size.height/2.0);
+    NSLog(NSStringFromCGSize(size));
     
-    t = CGAffineTransformScale(t, 1.0, -1.0);
-        t = CGAffineTransformConcat(self.importTranslation, t);
+    tmp = [self padImage:tmp to:CGSizeMake(rotatableCanvasWidth, rotatableCanvasHeight)];
     
-    t = CGAffineTransformScale(t, 1.0, -1.0);
-        t = CGAffineTransformConcat(self.importScale, t);
-        
-    t = CGAffineTransformScale(t, -1.0, 1.0);
-        t = CGAffineTransformConcat(self.importRotation, t);
+    if (self.scaleAmount < 1.0)
+    {
+        tmp = [self padImage:tmp to:CGSizeMake(rotatableCanvasWidth / self.scaleAmount, rotatableCanvasHeight / self.scaleAmount)];
+    }
     
-    //t = CGAffineTransformScale(t, -1.0, 1.0);
-    //    t = CGAffineTransformTranslate(t, -size.width/2.0, -size.height/2.0);
-
-    //ciImage = [ciImage imageByApplyingTransform:t];
+    CIImage *ciImage = [[CIImage alloc] initWithImage:[tmp imageWithTransform:self.importedImageView.transform]];
     
-    
+    CGPoint center = CGPointMake(size.width / 2.0, size.height / 2.0);
     
     CIContext *context = [CIContext contextWithOptions:nil];
-    CGRect rect = CGRectMake(0.0, 0.0, size.width, size.height);
+    CGRect r = ciImage.extent;
+    r.origin.x = (r.size.width - rotatableCanvasHeight) / 2.0;
+    r.origin.y = (r.size.height - rotatableCanvasWidth) / 2.0;
     
-    CIFilter *constantColorGenerator = [CIFilter filterWithName:@"CIConstantColorGenerator"];
-    CIColor *backgroundColor = [CIColor colorWithRed:01.0 green:01.0 blue:01.0 alpha:1.0];
-    [constantColorGenerator setValue:backgroundColor forKey:@"inputColor"];
+    r.size.width = rotatableCanvasHeight;
+    r.size.height = rotatableCanvasWidth;
     
-    CIFilter *sourceOverComposite = [CIFilter filterWithName:@"CISourceOverCompositing"];
-    [sourceOverComposite setValue:[constantColorGenerator valueForKey:@"outputImage"] forKey:@"inputBackgroundImage"];
-    [sourceOverComposite setValue:ciImage forKey:@"inputImage"];
-    CIImage *outImage = [sourceOverComposite valueForKey:@"outputImage"];
+    self.finalImage = [UIImage imageWithCGImage:[context createCGImage:ciImage fromRect:r] 
+                                          scale: 1.0
+                                    orientation:UIImageOrientationUp];
     
-    //CGSize targetSize = CGSizeMake(640.0, 480.0);
-    //rect = CGRectMake(0.0, 0.0, targetSize.width, targetSize.height);
-    
-    //CGAffineTransform scaleAndRotate = CGAffineTransformIdentity;
-    //scaleAndRotate = CGAffineTransformRotate(scaleAndRotate, M_PI_2);
-
-    //CIImage *finalImage = [outImage imageByApplyingTransform:scaleAndRotate];
-    
-    CGImageRef ref = [context createCGImage:ciImage fromRect:rect];
-    self.finalImage = [UIImage imageWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
-    CGImageRelease(ref);
-    
-    NSLog(@"width = %f, height = %f", self.finalImage.size.width, self.finalImage.size.height);
-    
-    // just for preview window
     self.finalImage = [self.finalImage resizedImage:CGSizeMake(100.0f, 134.0f) interpolationQuality:kCGInterpolationHigh];
     
     self.previewImageView.image = self.finalImage;
@@ -218,6 +278,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
+    self.scaleAmount = 1.0f;
     
 	UIImage *image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
     
@@ -266,6 +327,17 @@
 - (IBAction)handlePinchGesture:(UIPinchGestureRecognizer *)sender
 {
     // NSLog(@"handlePinchGesture");
+    NSLog(@"sender.scale = %f", sender.scale);
+        
+    self.scaleAmount *= sender.scale;
+    NSLog(@"self.scaleAmount = %f", self.scaleAmount);
+    
+    if (self.scaleAmount < 0.15) 
+    {
+        self.scaleAmount = 0.15;
+        NSLog(@"self.scaleAmount = %f", self.scaleAmount);
+        return;
+    }
 
     self.importScale = CGAffineTransformScale(self.importScale, sender.scale, sender.scale);
     [sender setScale:1.0];
